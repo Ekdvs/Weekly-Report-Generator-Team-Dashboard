@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
-import {  ZodError } from "zod";
+import type { ParamsDictionary } from "express-serve-static-core";
+import type { ParsedQs } from "qs";
+import { ZodError, type ZodTypeAny } from "zod";
 import ApiError from "../utils/apiError.js";
-import { AnyZodObject } from "zod/v3";
 
 export const validate =
-  (schema: AnyZodObject): RequestHandler =>
+  (schema: ZodTypeAny): RequestHandler =>
   (request: Request, _response: Response, next: NextFunction) => {
     try {
       const parsed = schema.parse({
@@ -13,7 +14,12 @@ export const validate =
         params: request.params,
       });
 
-      request.body = parsed.body ?? request.body;
+      if (parsed && typeof parsed === "object") {
+        const typedParsed = parsed as Record<string, unknown>;
+        if ("body" in typedParsed) request.body = typedParsed.body ?? request.body;
+        if ("query" in typedParsed) request.query = (typedParsed.query ?? request.query) as ParsedQs;
+        if ("params" in typedParsed) request.params = (typedParsed.params ?? request.params) as ParamsDictionary;
+      }
 
       next();
     } catch (err) {
