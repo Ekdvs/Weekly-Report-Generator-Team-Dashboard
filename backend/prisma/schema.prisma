@@ -19,70 +19,44 @@ enum ReportStatus {
 }
 
 model User {
-
-  id String @id @default(cuid())
-
-  name String
-
-  email String @unique
-
-  password String
-
-  role Role
-
-  reports Report[]
-
-  createdAt DateTime @default(now())
-
-  updatedAt DateTime @updatedAt
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  password  String
+  role      Role
+  reports   Report[]
+  // Projects this user has been assigned to (many-to-many)
+  projects  Project[] @relation("ProjectMembers")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Project {
-
-  id String @id @default(cuid())
-
-  name String @unique
-
+  id          String   @id @default(cuid())
+  name        String   @unique
   description String?
-
-  reports Report[]
-
-  createdAt DateTime @default(now())
-
-  updatedAt DateTime @updatedAt
+  reports     Report[]
+  // Team members assigned to this project (many-to-many)
+  members     User[]   @relation("ProjectMembers")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Report {
-
-  id String @id @default(cuid())
-
-  weekStart DateTime
-
-  weekEnd DateTime
-
+  id             String        @id @default(cuid())
+  weekStart      DateTime
+  weekEnd        DateTime
   tasksCompleted String
-
-  tasksPlanned String
-
-  blockers String?
-
-  hoursWorked Float?
-
-  notes String?
-
-  status ReportStatus @default(DRAFT)
-
-  submittedAt DateTime?
-
-  user User @relation(fields:[userId],references:[id])
-
-  userId String
-
-  project Project @relation(fields:[projectId],references:[id])
-
-  projectId String
-
-  createdAt DateTime @default(now())
-
-  updatedAt DateTime @updatedAt
+  tasksPlanned   String
+  blockers       String?
+  hoursWorked    Float?
+  notes          String?
+  status         ReportStatus  @default(DRAFT)
+  submittedAt    DateTime?
+  user           User          @relation(fields: [userId], references: [id])
+  userId         String
+  project        Project       @relation(fields: [projectId], references: [id])
+  projectId      String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
