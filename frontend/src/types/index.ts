@@ -21,3 +21,21 @@ export interface AuthUser {
   email: string;
   role: Role;
 }
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: Role;
+  createdAt?: string;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  description?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  _count?: { reports: number };
+  members?: User[];
+}
