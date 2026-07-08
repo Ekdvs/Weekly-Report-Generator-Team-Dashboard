@@ -2,7 +2,7 @@ import { DashboardFilterInput, TrendFilterInput, WorkloadFilterInput } from "../
 import prisma from "../config/prisma.js";
 import { ReportStatus } from "@prisma/client";
 
-const getWeekBounds = (date: Date) => {
+export const getWeekBounds = (date: Date) => {
     const d = new Date(date);
     const day = d.getDay(); // 0 = Sunday
     const diffToMonday = day === 0 ? -6 : 1 - day;
