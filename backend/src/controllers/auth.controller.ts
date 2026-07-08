@@ -1,6 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import { getCurrentUser, loginuser, registerUser } from "../services/auth.service.js";
 
+const COOKIE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+
+const setSessionCookie = (response: Response, token: string) => {
+  response.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: COOKIE_MAX_AGE_MS,
+  });
+};
 
 
 // register user
@@ -32,6 +43,7 @@ export const login = async (
 ) => {
     try {
         const result = await loginuser(request.body);
+        setSessionCookie(response, result.token);
         response.status(201).json(
             {
                 success: true,
@@ -62,3 +74,20 @@ export const me = async (
         next(error)
     }
 }
+
+export const logout = async (
+  _request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  try {
+    response.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    });
+    response.status(200).json({ success: true, message: "Logged out successfully" });
+  } catch (err) {
+    next(err);
+  }
+};

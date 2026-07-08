@@ -11,16 +11,18 @@ export const authenticate = (
 ) => {
   try {
     const authHeader = request.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      throw ApiError.unauthorized("No token provided");
+    let token: string | undefined;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
+    } else if (request.cookies?.token) {
+      // Browser clients authenticate via the httpOnly session cookie
+      token = request.cookies.token;
     }
-
-    const token = authHeader.split(" ")[1];
 
     if (!token) {
       throw ApiError.unauthorized("No token provided");
     }
+
 
     const decoded = verifyToken(token);
     request.user = decoded;
