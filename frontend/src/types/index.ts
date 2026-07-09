@@ -39,3 +39,23 @@ export interface Project {
   _count?: { reports: number };
   members?: User[];
 }
+
+
+export interface Report {
+  id: string;
+  weekStart: string;
+  weekEnd: string;
+  tasksCompleted: string;
+  tasksPlanned: string;
+  blockers?: string | null;
+  hoursWorked?: number | null;
+  notes?: string | null;
+  status: ReportStatus;
+  submittedAt?: string | null;
+  projectId: string;
+  project: Project | { id: string; name: string };
+  userId: string;
+  user?: { id: string; name: string; email?: string };
+  createdAt: string;
+  updatedAt: string;
+}

@@ -31,7 +31,8 @@ export const LoginPage = () => {
     try {
       const user = await login(values.email, values.password);
       navigate(user.role === "MANAGER" ? "/dashboard" : "/reports");
-    } catch (err: any) {
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
       setServerError(err.response?.data?.message || "Login failed. Try again.");
     }
   };

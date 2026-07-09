@@ -127,8 +127,20 @@ export const submitReport = async (id: string, requesterId: string) => {
 };
 
 //ow report history (team member view)
-export const getMyReports = async (userId: string, query: ReportQueryInput) => {
-  const { projectId, status, dateFrom, dateTo, page, limit } = query;
+export const getMyReports = async (
+  userId: string,
+  query: ReportQueryInput
+) => {
+  const {
+    projectId,
+    status,
+    dateFrom,
+    dateTo,
+  } = query;
+
+  // Convert query params to numbers
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
 
   const where = {
     userId,
@@ -145,17 +157,29 @@ export const getMyReports = async (userId: string, query: ReportQueryInput) => {
   const [reports, total] = await Promise.all([
     prisma.report.findMany({
       where,
-      include: { project: true },
-      orderBy: { weekStart: "desc" },//new report come frist
+      include: {
+        project: true,
+      },
+      orderBy: {
+        weekStart: "desc", // latest report first
+      },
       skip: (page - 1) * limit,
       take: limit,
     }),
-    prisma.report.count({ where }),
+
+    prisma.report.count({
+      where,
+    }),
   ]);
 
   return {
     reports,
-    pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
   };
 };
 

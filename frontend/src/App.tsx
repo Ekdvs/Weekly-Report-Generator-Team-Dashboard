@@ -6,6 +6,9 @@ import { LoginPage } from './pages/LoginPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { ProtectedRoute } from './components/layout/ProtectedRoute'
 import { AppLayout } from './components/layout/AppLayout'
+import { MyReportsPage } from './pages/MyReportsPage'
+import { RoleRoute } from './components/layout/RoleRoute'
+import { ProjectsPage } from './pages/ProjectsPage'
 
 
 const RoleHome = () => {
@@ -27,6 +30,13 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
               <Route path="/" element={<RoleHome />} />
+              {/* Personal weekly report page — available to everyone */}
+              <Route path="/reports" element={<MyReportsPage />} />
+
+               {/* Manager-only */}
+               <Route element={<RoleRoute allow={["MANAGER"]} />}>
+                <Route path="/projects" element={<ProjectsPage />} />
+               </Route>
 
             </Route>
 
