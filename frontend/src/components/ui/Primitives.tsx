@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 
 export const Card = ({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn("rounded-xl border border-slate-200/70 bg-white p-5 shadow-card", className)}
+    className={cn("rounded-xl border border-slate-200/70 bg-cyan-50 p-5 shadow-card", className)}
     {...props}
   >
     {children}
@@ -22,7 +22,7 @@ export const CardHeader = ({
   subtitle?: string;
   action?: ReactNode;
 }) => (
-  <div className="mb-4 flex items-start justify-between gap-3">
+  <div className="mb-4 flex items-start justify-between gap-3 ">
     <div>
       <h3 className="font-display text-base font-semibold text-ink">{title}</h3>
       {subtitle && <p className="mt-0.5 text-sm text-ink-soft">{subtitle}</p>}

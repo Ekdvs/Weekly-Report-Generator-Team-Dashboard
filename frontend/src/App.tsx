@@ -9,6 +9,9 @@ import { AppLayout } from './components/layout/AppLayout'
 import { MyReportsPage } from './pages/MyReportsPage'
 import { RoleRoute } from './components/layout/RoleRoute'
 import { ProjectsPage } from './pages/ProjectsPage'
+import { ReportEditorPage } from './pages/ReportEditorPage'
+import { TeamDashboardPage } from './pages/TeamDashboardPage'
+import { UserManagementPage } from './pages/UserManagementPage'
 
 
 const RoleHome = () => {
@@ -32,10 +35,15 @@ function App() {
               <Route path="/" element={<RoleHome />} />
               {/* Personal weekly report page — available to everyone */}
               <Route path="/reports" element={<MyReportsPage />} />
+              <Route path="/reports/new" element={<ReportEditorPage />} />
+              <Route path="/reports/:id" element={<ReportEditorPage />} />
 
                {/* Manager-only */}
                <Route element={<RoleRoute allow={["MANAGER"]} />}>
                 <Route path="/projects" element={<ProjectsPage />} />
+                <Route path="/dashboard" element={<TeamDashboardPage />} />
+                <Route path="/users" element={<UserManagementPage />} />
+              
                </Route>
 
             </Route>
