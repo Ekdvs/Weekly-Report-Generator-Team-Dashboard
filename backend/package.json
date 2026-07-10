@@ -8,6 +8,10 @@
     "build": "tsc",
     "start": "node dist/server.js"
   },
+  "prisma": {
+    "schema": "src/prisma/schema.prisma",
+    "seed": "tsx src/prisma/seed.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

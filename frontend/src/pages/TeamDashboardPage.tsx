@@ -12,6 +12,9 @@ import { SubmissionStatusTable } from "../components/dashboard/SubmissionStatusT
 import { OpenBlockersList } from "../components/dashboard/OpenBlockersList";
 import { RecentActivityFeed } from "../components/dashboard/RecentActivityFeed";
 import { AiChatWidget } from "../components/ai/AiChatWidget";
+import { TeamSummaryModal } from "../components/ai/TeamSummaryModal";
+import { Button } from "../components/ui/Button";
+import { Sparkles } from "lucide-react";
 
 
 const todayIso = () => new Date().toISOString().slice(0, 10);
@@ -41,12 +44,20 @@ export const TeamDashboardPage = () => {
   });
   const { workload } = useWorkloadByProject({ userId: filters.userId || undefined });
 
+ const [isSummaryOpen, setIsSummaryOpen] = useState(false);
+
   return (
     <>
-      <Topbar title="Team Dashboard" subtitle="Submissions, blockers, and workload at a glance" />
+       <Topbar title="Team Dashboard" subtitle="Submissions, blockers, and workload at a glance" />
 
       <div className="space-y-6 p-8">
-        <DashboardFilters value={filters} onChange={setFilters} projects={projects} members={members} />
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <DashboardFilters value={filters} onChange={setFilters} projects={projects} members={members} />
+          <Button variant="secondary" onClick={() => setIsSummaryOpen(true)}>
+            <Sparkles className="h-4 w-4 text-brand-700" />
+            AI team summary
+          </Button>
+        </div>
 
         {isLoading && <Spinner />}
         {error && <ErrorState message={error} />}
@@ -71,7 +82,15 @@ export const TeamDashboardPage = () => {
         )}
       </div>
 
+      <TeamSummaryModal
+        isOpen={isSummaryOpen}
+        onClose={() => setIsSummaryOpen(false)}
+        filters={{ week: filters.week || undefined, projectId: filters.projectId || undefined }}
+      />
+
       <AiChatWidget />
     </>
+
+  
   );
 };
