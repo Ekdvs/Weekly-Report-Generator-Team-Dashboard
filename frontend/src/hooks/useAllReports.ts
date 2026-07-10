@@ -1,35 +1,62 @@
 import { useCallback, useEffect, useState } from "react";
-import { allReportsRequest, type ReportQuery } from "../api/report.api";
-import type { Pagination } from "../types";
+import type { Pagination, Report, ReportStatus } from "../types";
+import { allReportsRequest } from "../api/report.api";
 
 
-export const useAllReports = (query: ReportQuery = {}) => {
+interface UseAllReportsParams {
+  userId?: string;
+  projectId?: string;
+  status?: ReportStatus | "";
+  dateFrom?: string;
+  dateTo?: string;
+  page: number;
+  limit: number;
+}
+
+interface UseAllReportsResult {
+  reports: Report[];
+  pagination: Pagination | null;
+  isLoading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
+}
+
+export const useAllReports = (
+  params: UseAllReportsParams
+): UseAllReportsResult => {
   const [reports, setReports] = useState<Report[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const queryKey = JSON.stringify(query);
+  const { userId, projectId, status, dateFrom, dateTo, page, limit } = params;
 
-  const refetch = useCallback(async () => {
+  const fetchReports = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const { data } = await allReportsRequest(query);
-      setReports(data.data);
+      const { data } = await allReportsRequest({
+        userId,
+        projectId,
+        status: status || undefined,
+        dateFrom,
+        dateTo,
+        page,
+        limit,
+      });
+      setReports(data.data as Report[]);
       setPagination(data.pagination ?? null);
-    } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } };
-      setError(err.response?.data?.message || "Failed to load team reports");
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
+      setError(e.response?.data?.message || "Failed to load reports");
     } finally {
       setIsLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryKey]);
+  }, [userId, projectId, status, dateFrom, dateTo, page, limit]);
 
   useEffect(() => {
-    void Promise.resolve().then(refetch);
-  }, [refetch]);
+    void Promise.resolve().then(fetchReports);
+  }, [fetchReports]);
 
-  return { reports, pagination, isLoading, error, refetch };
+  return { reports, pagination, isLoading, error, refetch: fetchReports };
 };

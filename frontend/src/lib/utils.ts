@@ -17,4 +17,8 @@ export const formatWeekRange = (weekStart: string, weekEnd: string) => {
   return `${startLabel} – ${endLabel}`;
 };
 
-export const toDateInputValue = (iso: string) => iso.slice(0, 10);
+export const toDateInputValue = (value: string): string => {
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toISOString().slice(0, 10);
+};

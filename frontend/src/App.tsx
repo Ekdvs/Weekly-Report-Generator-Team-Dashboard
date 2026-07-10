@@ -12,6 +12,8 @@ import { ProjectsPage } from './pages/ProjectsPage'
 import { ReportEditorPage } from './pages/ReportEditorPage'
 import { TeamDashboardPage } from './pages/TeamDashboardPage'
 import { UserManagementPage } from './pages/UserManagementPage'
+import { TeamReportsPage } from './pages/TeamReportsPage'
+import { ReportViewPage } from './pages/ReportViewPage'
 
 
 const RoleHome = () => {
@@ -38,13 +40,15 @@ function App() {
               <Route path="/reports/new" element={<ReportEditorPage />} />
               <Route path="/reports/:id" element={<ReportEditorPage />} />
 
-               {/* Manager-only */}
-               <Route element={<RoleRoute allow={["MANAGER"]} />}>
+              {/* Manager-only */}
+              <Route element={<RoleRoute allow={["MANAGER"]} />}>
                 <Route path="/projects" element={<ProjectsPage />} />
                 <Route path="/dashboard" element={<TeamDashboardPage />} />
                 <Route path="/users" element={<UserManagementPage />} />
-              
-               </Route>
+                <Route path="/team-reports" element={<TeamReportsPage />}/>
+                <Route path="/team-reports/:id" element={<ReportViewPage />} />
+
+              </Route>
 
             </Route>
 

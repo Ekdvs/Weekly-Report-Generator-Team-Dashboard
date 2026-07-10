@@ -185,7 +185,11 @@ export const getMyReports = async (
 
 // report view for manager with filters
 export const listAllReports = async (query: ReportQueryInput) => {
-  const { projectId, userId, status, dateFrom, dateTo, page, limit } = query;
+  const { projectId, userId, status, dateFrom, dateTo } = query;
+
+
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
 
   const where = {
     ...(projectId && { projectId }),

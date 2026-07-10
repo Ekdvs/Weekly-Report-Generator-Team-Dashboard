@@ -19,70 +19,53 @@ enum ReportStatus {
 }
 
 model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role
 
-  id String @id @default(cuid())
-
-  name String
-
-  email String @unique
-
-  password String
-
-  role Role
-
-  reports Report[]
+  reports   Report[]
+  projects  Project[]
 
   createdAt DateTime @default(now())
-
   updatedAt DateTime @updatedAt
 }
 
 model Project {
-
-  id String @id @default(cuid())
-
-  name String @unique
-
+  id          String   @id @default(cuid())
+  name        String   @unique
   description String?
 
-  reports Report[]
+  reports     Report[]
+  members     User[]
 
-  createdAt DateTime @default(now())
-
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Report {
+  id              String       @id @default(cuid())
 
-  id String @id @default(cuid())
+  weekStart       DateTime
+  weekEnd         DateTime
 
-  weekStart DateTime
+  tasksCompleted  String
+  tasksPlanned    String
+  blockers        String?
+  hoursWorked     Float?
+  notes           String?
 
-  weekEnd DateTime
+  status          ReportStatus @default(DRAFT)
+  submittedAt     DateTime?
 
-  tasksCompleted String
+  userId          String
+  projectId       String
 
-  tasksPlanned String
+  user            User         @relation(fields: [userId], references: [id])
+  project         Project      @relation(fields: [projectId], references: [id])
 
-  blockers String?
-
-  hoursWorked Float?
-
-  notes String?
-
-  status ReportStatus @default(DRAFT)
-
-  submittedAt DateTime?
-
-  user User @relation(fields:[userId],references:[id])
-
-  userId String
-
-  project Project @relation(fields:[projectId],references:[id])
-
-  projectId String
-
-  createdAt DateTime @default(now())
-
-  updatedAt DateTime @updatedAt
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
+

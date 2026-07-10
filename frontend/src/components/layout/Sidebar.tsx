@@ -135,10 +135,9 @@ export const Sidebar = () => {
             <SectionLabel>Reports</SectionLabel>
             <div className="space-y-1">
               <NavItem
-                to="/reports"
-                end
+                to="/team-reports"
                 icon={FileText}
-                label="My Reports"
+                label="All Team Reports"
                 iconColorClass="bg-emerald-500/20 text-emerald-300"
               />
             </div>

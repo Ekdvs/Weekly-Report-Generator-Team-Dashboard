@@ -117,3 +117,8 @@ export interface DashboardFilters {
   projectId?: string;
   userId?: string;
 }
+export interface UserSummary {
+  id: string;
+  name: string;
+  email: string;
+}

@@ -87,12 +87,13 @@ export const TeamSummaryModal = ({ isOpen, onClose, filters }: TeamSummaryModalP
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="AI team summary" maxWidth="max-w-2xl">
-      <div className="space-y-4">
-        {isLoading && <Spinner />}
-        {error && <ErrorState message={error} />}
+      <div className="flex max-h-[70vh] flex-col">
+        {/* Scrollable content region — header/footer stay put, only this area scrolls */}
+        <div className="-mr-2 flex-1 space-y-4 overflow-y-auto pr-2">
+          {isLoading && <Spinner />}
+          {error && <ErrorState message={error} />}
 
-        {!isLoading && !error && summary && (
-          <>
+          {!isLoading && !error && summary && (
             <div className="space-y-3">
               {sections.map((section) => {
                 const config = SECTION_CONFIG.find((s) => s.key === section.title);
@@ -120,17 +121,20 @@ export const TeamSummaryModal = ({ isOpen, onClose, filters }: TeamSummaryModalP
                 );
               })}
             </div>
+          )}
+        </div>
 
-            <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-              <p className="text-xs text-ink-soft">
-                Based on {reportsUsed} {reportsUsed === 1 ? "report" : "reports"}
-              </p>
-              <Button size="sm" variant="secondary" onClick={generate} isLoading={isLoading}>
-                <RefreshCw className="h-3.5 w-3.5" />
-                Regenerate
-              </Button>
-            </div>
-          </>
+        {/* Footer stays pinned below the scroll area */}
+        {!isLoading && !error && summary && (
+          <div className="flex items-center justify-between border-t border-slate-100 pt-3">
+            <p className="text-xs text-ink-soft">
+              Based on {reportsUsed} {reportsUsed === 1 ? "report" : "reports"}
+            </p>
+            <Button size="sm" variant="secondary" onClick={generate} isLoading={isLoading}>
+              <RefreshCw className="h-3.5 w-3.5" />
+              Regenerate
+            </Button>
+          </div>
         )}
       </div>
     </Modal>
