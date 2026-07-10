@@ -12,6 +12,6 @@ userRouter.use(authenticate,managerOnly)
 
 userRouter.get("/",validate(listUsersQuerySchema),listController)
 userRouter.get("/:id",validate(userIdParamSchema),getOneController)
-userRouter.get("/:id/role",validate(updateUserRoleSchema),updateRoleController)
+userRouter.patch("/:id/role",validate(updateUserRoleSchema),updateRoleController)
 
 export default userRouter

@@ -197,8 +197,12 @@ export const listAllReports = async (query: ReportQueryInput) => {
     ...(status && { status }),
     ...((dateFrom || dateTo) && {
       weekStart: {
-        ...(dateFrom && { gte: dateFrom }),
-        ...(dateTo && { lte: dateTo }),
+        ...(dateFrom && {
+          gte: new Date(`${dateFrom}T00:00:00.000Z`),
+        }),
+        ...(dateTo && {
+          lte: new Date(`${dateTo}T23:59:59.999Z`),
+        }),
       },
     }),
   };
